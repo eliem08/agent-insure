@@ -10,8 +10,9 @@ class QuoteTests(unittest.TestCase):
         self.assertLess(safe, bare * 0.5)
 
     def test_riskier_actions_cost_more(self):
-        self.assertLess(quote(1000, ["read_only"], [], 100_000).annual_premium,
-                        quote(1000, ["trading"], [], 100_000).annual_premium)
+        self.assertLess(
+            quote(1000, ["read_only"], [], 100_000).annual_premium, quote(1000, ["trading"], [], 100_000).annual_premium
+        )
 
     def test_validation(self):
         with self.assertRaises(ValueError):

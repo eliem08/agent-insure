@@ -1,16 +1,32 @@
 """Underwriting, policies and claims adjudication for agent E&O cover."""
+
 from __future__ import annotations
 
 import json
 import os
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 
 __all__ = ["ACTION_RISK", "GUARDRAIL_CREDITS", "COVERED_INCIDENTS", "Quote", "Policy", "ClaimResult", "quote", "Book"]
 
 BASE_RATE = 0.012  # annual premium as share of the coverage limit, before modifiers
-ACTION_RISK = {"read_only": 0.5, "email": 1.1, "payments": 1.6, "code_deploy": 1.5, "data_delete": 1.7, "trading": 2.0, "customer_chat": 1.2}
+ACTION_RISK = {
+    "read_only": 0.5,
+    "email": 1.1,
+    "payments": 1.6,
+    "code_deploy": 1.5,
+    "data_delete": 1.7,
+    "trading": 2.0,
+    "customer_chat": 1.2,
+}
 GUARDRAIL_CREDITS = {"human_approval": 0.30, "spend_caps": 0.15, "sandbox": 0.15, "audit_log": 0.10, "rollback": 0.10}
-COVERED_INCIDENTS = {"wrong_payment", "duplicate_payment", "data_loss", "erroneous_communication", "bad_trade", "service_outage"}
+COVERED_INCIDENTS = {
+    "wrong_payment",
+    "duplicate_payment",
+    "data_loss",
+    "erroneous_communication",
+    "bad_trade",
+    "service_outage",
+}
 EXCLUSIONS = {"intentional_misuse", "known_unpatched_vuln", "fines_penalties"}
 DEDUCTIBLE_CREDIT = {0: 1.0, 1000: 0.92, 5000: 0.82, 25000: 0.70}
 
@@ -21,8 +37,14 @@ class Quote:
     worksheet: dict
 
 
-def quote(spend_limit: float, actions: list[str], guardrails: list[str], limit: float,
-          deductible: int = 1000, prior_claims: int = 0) -> Quote:
+def quote(
+    spend_limit: float,
+    actions: list[str],
+    guardrails: list[str],
+    limit: float,
+    deductible: int = 1000,
+    prior_claims: int = 0,
+) -> Quote:
     unknown = [a for a in actions if a not in ACTION_RISK]
     if unknown:
         raise ValueError(f"unknown actions {unknown}")
@@ -83,10 +105,14 @@ class Book:
     def bind(self, holder, agent, spend_limit, actions, guardrails, limit, deductible=1000, prior_claims=0) -> Policy:
         q = quote(spend_limit, actions, guardrails, limit, deductible, prior_claims)
         pid = f"POL-{len(self.policies) + 1:04d}"
-        self.policies[pid] = Policy(pid, holder, agent, limit, deductible, list(actions), list(guardrails), q.annual_premium)
+        self.policies[pid] = Policy(
+            pid, holder, agent, limit, deductible, list(actions), list(guardrails), q.annual_premium
+        )
         return self.policies[pid]
 
-    def claim(self, policy_id: str, incident: str, loss: float, guardrails_active: list[str], cause: str | None = None) -> ClaimResult:
+    def claim(
+        self, policy_id: str, incident: str, loss: float, guardrails_active: list[str], cause: str | None = None
+    ) -> ClaimResult:
         p = self.policies.get(policy_id)
         if not p:
             return ClaimResult(False, 0, ["policy not found"])
