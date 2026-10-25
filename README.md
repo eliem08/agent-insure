@@ -22,6 +22,18 @@ agent-insure --book book.json bind --holder acme --agent ap --spend-limit 5000 -
 agent-insure --book book.json claim POL-0001 --type wrong_payment --loss 8000 --guardrails-active human_approval
 ```
 
+## Web app and API
+
+Every command is also a JSON API endpoint and a browser form, served by the built-in web app.
+
+```bash
+agent-insure-web --port 8000          # then open http://127.0.0.1:8000
+docker build -t agent-insure . && docker run -p 8000:8000 -v agent-insure-data:/data agent-insure
+```
+
+Endpoints: `POST /api/quote`, `POST /api/bind`, `POST /api/claim`, plus `GET /healthz` and `GET /api/spec` (machine-readable field list).
+Files are sent as `{"name": ..., "content": ...}`, folders as `{"files": [...]}` or a base64 zip.
+
 ## Pricing
 
 Every plan starts with a 14-day free trial. Prices in USD, billed monthly unless noted.

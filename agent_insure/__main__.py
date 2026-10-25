@@ -24,7 +24,7 @@ def _risk_args(p):
     p.add_argument("--prior-claims", type=int, default=0)
 
 
-def _run(argv=None):
+def build_parser():
     ap = argparse.ArgumentParser(prog="agent-insure")
     ap.add_argument("--book", default="policies.json")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -39,6 +39,11 @@ def _run(argv=None):
     c.add_argument("--loss", type=_finite_float, required=True)
     c.add_argument("--guardrails-active", nargs="*", default=[])
     c.add_argument("--cause")
+    return ap
+
+
+def _run(argv=None):
+    ap = build_parser()
     a = ap.parse_args(argv)
 
     if a.cmd == "quote":

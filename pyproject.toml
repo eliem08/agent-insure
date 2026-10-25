@@ -23,6 +23,7 @@ dev = ["ruff>=0.6"]
 
 [project.scripts]
 agent-insure = "agent_insure.__main__:main"
+agent-insure-web = "agent_insure.web:main"
 
 [project.urls]
 Repository = "https://github.com/eliem08/agent-insure"

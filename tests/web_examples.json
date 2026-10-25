@@ -1,0 +1,47 @@
+[
+ {
+  "op": "quote",
+  "payload": {
+   "spend_limit": 10000.0,
+   "actions": [
+    "payments",
+    "email"
+   ],
+   "guardrails": [
+    "human_approval",
+    "audit_log"
+   ],
+   "limit": 250000.0,
+   "deductible": 1000,
+   "prior_claims": 0
+  }
+ },
+ {
+  "op": "bind",
+  "payload": {
+   "holder": "acme",
+   "agent": "ap",
+   "spend_limit": 5000.0,
+   "actions": [
+    "payments"
+   ],
+   "guardrails": [
+    "human_approval"
+   ],
+   "limit": 50000.0,
+   "deductible": 1000,
+   "prior_claims": 0
+  }
+ },
+ {
+  "op": "claim",
+  "payload": {
+   "policy_id": "POL-0001",
+   "type": "wrong_payment",
+   "loss": 8000.0,
+   "guardrails_active": [
+    "human_approval"
+   ]
+  }
+ }
+]
