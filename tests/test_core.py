@@ -37,6 +37,24 @@ class ClaimTests(unittest.TestCase):
         r = self.book.claim(self.p.policy_id, "alien_invasion", 5000, ["human_approval"], cause="intentional_misuse")
         self.assertEqual(len(r.reasons), 2)
 
+    def test_zero_or_negative_limits_and_negative_claims_history_are_rejected(self):
+        for kwargs in ({"limit": 0}, {"limit": -50_000}, {"spend_limit": -1}, {"prior_claims": -3}):
+            args = {"spend_limit": 1000, "actions": ["email"], "guardrails": [], "limit": 100_000, **kwargs}
+            with self.subTest(kwargs=kwargs), self.assertRaises(ValueError):
+                quote(**args)
+
+    def test_listing_a_guardrail_twice_is_not_double_credit(self):
+        once = quote(1000, ["payments"], ["human_approval"], 500_000).annual_premium
+        twice = quote(1000, ["payments"], ["human_approval", "human_approval"], 500_000).annual_premium
+        self.assertEqual(once, twice)
+
+    def test_nan_or_negative_loss_is_rejected(self):
+        b = Book()
+        p = b.bind("acme", "bot", 1000, ["payments"], [], 100_000)
+        for loss in (float("nan"), -10_000):
+            with self.subTest(loss=loss), self.assertRaises(ValueError):
+                b.claim(p.policy_id, "wrong_payment", loss, [])
+
 
 if __name__ == "__main__":
     unittest.main()

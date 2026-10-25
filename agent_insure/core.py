@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 from dataclasses import asdict, dataclass, field
 
@@ -45,6 +46,13 @@ def quote(
     deductible: int = 1000,
     prior_claims: int = 0,
 ) -> Quote:
+    if not (math.isfinite(limit) and limit > 0):
+        raise ValueError(f"coverage limit must be a finite number > 0, got {limit!r}")
+    if not (math.isfinite(spend_limit) and spend_limit >= 0):
+        raise ValueError(f"spend limit must be a finite number >= 0, got {spend_limit!r}")
+    if prior_claims < 0:
+        raise ValueError("prior_claims cannot be negative")
+    actions, guardrails = sorted(set(actions)), sorted(set(guardrails))  # listing a guardrail twice is not 2x credit
     unknown = [a for a in actions if a not in ACTION_RISK]
     if unknown:
         raise ValueError(f"unknown actions {unknown}")
@@ -94,8 +102,11 @@ class Book:
         self.path = path
         self.policies: dict[str, Policy] = {}
         if path and os.path.exists(path):
-            with open(path, encoding="utf-8") as fh:
-                self.policies = {p["policy_id"]: Policy(**p) for p in json.load(fh)}
+            with open(path, encoding="utf-8-sig") as fh:
+                data = json.load(fh)
+            if not isinstance(data, list) or not all(isinstance(p, dict) for p in data):
+                raise ValueError(f"{path}: expected a JSON list of policies")
+            self.policies = {p["policy_id"]: Policy(**p) for p in data}
 
     def save(self):
         if self.path:
@@ -113,6 +124,8 @@ class Book:
     def claim(
         self, policy_id: str, incident: str, loss: float, guardrails_active: list[str], cause: str | None = None
     ) -> ClaimResult:
+        if not (math.isfinite(loss) and loss >= 0):
+            raise ValueError(f"loss must be a finite number >= 0, got {loss!r}")
         p = self.policies.get(policy_id)
         if not p:
             return ClaimResult(False, 0, ["policy not found"])
