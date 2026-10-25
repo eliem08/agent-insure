@@ -1,4 +1,4 @@
-"""Geico for agents: insurance for when an agent makes an expensive mistake."""
+"""Agent Insure: Price and adjudicate insurance for the expensive mistakes AI agents make."""
 
 from .core import *
 

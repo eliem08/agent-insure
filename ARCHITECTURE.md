@@ -44,7 +44,7 @@ Every decision returns its reasons, and every claim is appended to the policy hi
 ## 6. Production architecture
 - Rating and claims as versioned rule packs (rates are filed, so versions are immutable).
 - Postgres for policies, claims and endorsements. Double-entry ledger for premium and payouts.
-- Telemetry connector verifies guardrail state from signed agent-alarm and agent-okta audit exports.
+- Telemetry connector verifies guardrail state from signed agent-alarm and agentwarden audit exports.
 
 ## 7. Compliance
 Licensed carrier or MGA partnership required. Claims handling timelines tracked per state rules.
