@@ -253,4 +253,24 @@ SPEC = {
             "id": "claim",
         },
     ],
+    "plans": [
+        {
+            "key": "broker",
+            "name": "Broker",
+            "price": "$199 per month",
+            "features": ["Unlimited quotes", "Bind policies into a policy book", "Hosted API"],
+        },
+        {
+            "key": "carrier",
+            "name": "Carrier",
+            "price": "$999 per month",
+            "features": ["Claims adjudication", "Guardrail-aware pricing", "Priority support"],
+        },
+        {
+            "key": "enterprise",
+            "name": "Enterprise",
+            "price": "$5,000 per month",
+            "features": ["Self-hosted deployment", "SLA"],
+        },
+    ],
 }
