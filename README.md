@@ -55,15 +55,18 @@ Buyers pick a plan on `/pricing`, pay on Stripe Checkout and see their API key o
 
 ## Pricing
 
-Every plan starts with a 14-day free trial. Prices in USD, billed monthly unless noted.
+Monthly plans start with a 14-day free trial. Prices in USD, billed monthly unless noted.
 
 | Plan | Price | Includes |
 |---|---|---|
-| **Broker** | $199 per month | Unlimited quotes; Quote worksheets; Policy book |
-| **Carrier** | $999 per month | Claims adjudication; Custom rating factors; Portfolio reports |
-| **Enterprise** | $5,000 per month | Model customisation; Actuarial support; On-prem |
+| **Broker** | $199 per month | Unlimited quotes; Bind policies into a policy book; Hosted API |
+| **Carrier** | $999 per month | Claims adjudication; Guardrail-aware pricing; Priority support |
+| **Enterprise** | $5,000 per month | Self-hosted deployment; SLA |
 
 To start a trial or buy a plan, [request access](https://github.com/eliem08/agent-insure/issues/new?title=Agent%20Insure%20trial&labels=sales).
+
+Plan note: every plan runs the same software, and every API key unlocks all of it. Seat, agent and volume
+limits are licence terms; the code does not enforce them. Support, SLA and done-for-you items are services.
 
 ## Licence
 
